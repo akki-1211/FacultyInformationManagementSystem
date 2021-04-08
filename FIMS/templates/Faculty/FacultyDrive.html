@@ -1,0 +1,517 @@
+{% extends 'layout/FacultyLayout.html' %} {% load static %} {% block main %}
+{% load custom_tag %}
+<div class="row">
+
+    <div class="col-lg-12">
+        <div class="d-flex align-items-center justify-content-between welcome-content mb-3">
+            <div class="navbar-breadcrumb">
+                <nav aria-label="breadcrumb">
+                    <ul class="breadcrumb">
+                        {% if new_ref %} {% with new_ref|split:"/" as ref %} {% for folder in ref %} {% addstr folder as folder_path %} {% if forloop.counter == 1 %}
+
+                        <li class="breadcrumb-item"><a href="/Faculty/Drive/">Home</a></li>{% else %}
+                        <li class="breadcrumb-item active" aria-current="page"><a href="/Faculty/folder_view/{{folder_path}}">{{ folder }}</a></li>{% endif %} {% endfor %} {% endwith %} {% reassign %} {% else %}
+                        <h4>Home</h4>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+            <!-- {% if new_ref %}
+                {% with new_ref|split:"/" as ref %}
+                    {% for folder in ref %}
+                        {% addstr folder as folder_path %}
+                        {% if forloop.counter == 1 %}
+                            <a href="/Faculty/Drive/">Home</a>
+                        {% else %}
+                            <span>></span><a href="/Faculty/folder_view/{{folder_path}}">{{ folder }}</a>
+                        {% endif %}
+                    {% endfor %}
+                {% endwith %}
+                {% reassign %}
+            {% else %}
+                <h4>All Files</h4>  
+            {% endif %} -->
+            <div class="d-flex align-items-center">
+                <div class="list-grid-toggle mr-4">
+                    <span class="icon icon-grid i-grid"><i class="ri-layout-grid-line font-size-20"></i></span>
+                    <span class="icon icon-grid i-list"><i class="ri-list-check font-size-20"></i></span>
+                    <span class="label label-list">List</span>
+                </div>
+                <div class="dashboard1-dropdown d-flex align-items-center">
+                    <div class="dashboard1-info rounded">
+                        <a href="#calander" class="collapsed" data-toggle="collapse" aria-expanded="false">
+                            <i class="ri-arrow-down-s-line"></i>
+                        </a>
+                        <ul id="calander" class="iq-dropdown collapse list-inline m-0 p-0 mt-2">
+                            <li class="mb-2">
+                                <a href="#" data-toggle="modal" data-target="#myModal" data-placement="right" title="Add New File"><i
+                                        class="las la-file iq-arrow-left"></i></a>
+                            </li>
+                            <!-- The Modal -->
+                            <div class="modal fade" id="myModal">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+
+                                        <!-- Modal Header -->
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Upload Your File</h4>
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        </div>
+
+                                        <!-- Modal body -->
+                                        <div class="modal-body">
+                                            <form action="/Faculty/file_upload/" method="POST" class="dropzone">
+                                                {% csrf_token %}
+                                                <div class="fallback">
+                                                    <input name="file" type="file" multiple />
+                                                </div>
+                                            </form>
+                                        </div>
+
+                                        <!-- Modal footer -->
+                                        <div class="modal-footer">
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <li>
+                                <a href="#" data-toggle="modal" data-target="#FolderModal" data-placement="right" title="Add New Folder"><i
+                                        class="las la-folder iq-arrow-left"></i></a>
+                            </li>
+                            <div class="modal fade" id="FolderModal">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+
+                                        <!-- Modal Header -->
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Create New Folder Here</h4>
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        </div>
+
+                                        <!-- Modal body -->
+                                        <div class="modal-body">
+                                            <form action="/Faculty/new_folder/" method="POST">
+                                                {% csrf_token %}
+                                                <div class="form-group">
+                                                    <input type="hidden" id="path" name="path" value="{{path}}"/>
+                                                    <input type="text" class="form-control" id="foldername1" name="foldername1" aria-describedby="emailHelp" placeholder="Folder Name">
+                                                    <!-- <small id="emailHelp" class="form-text text-muted">Empty Folder Will Created</small> -->
+                                                </div>
+                                                <button type="submit" class="btn btn-primary">Create</button>
+                                            </form>
+                                        </div>
+
+                                        <!-- Modal footer -->
+                                        <div class="modal-footer">
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="icon icon-grid i-grid">
+    <div class="row" id="files">
+
+        <!-- Files Here -->
+
+    </div>
+</div>
+<div class="icon icon-grid i-list">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card card-block card-stretch card-height">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table mb-0 table-borderless tbl-server-info">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Timecreate</th>
+                                    <th scope="col">Updated</th>
+                                    <th scope="col">File Size(KB)</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="listview_of_file">
+
+                                <!--  list view  -->
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock main %} {% block script %}
+
+<script src="{% static 'assets/vendor/dropzone-5.7.0/dist/dropzone.js '%}"></script>
+<script src="https://www.gstatic.com/firebasejs/6.2.4/firebase.js"></script>
+<script>
+    config = {
+        apiKey: "AIzaSyB0E9kvv4N7TKM6jiBeUnaUhHro8ML1UzA",
+        authDomain: "facultyinformationsystem-49a2b.firebaseapp.com",
+        projectId: "facultyinformationsystem-49a2b",
+        storageBucket: "facultyinformationsystem-49a2b.appspot.com",
+        messagingSenderId: "90902353716",
+        appId: "1:90902353716:web:44b655ed0b6a9bcd2df761",
+        measurementId: "G-RLK92EMYC8",
+        databaseURL: "https://facultyinformationsystem-49a2b.firebaseio.com"
+    }
+
+    firebase.initializeApp(config);
+    var storage = firebase.storage();
+    var storageRef = storage.ref();
+    $(document).ready(function() {
+        var i = 0;
+        // Create a reference under which you want to list
+        var listRef = storageRef.child('{{path}}');
+        // Find all the prefixes and items.
+        listRef.listAll().then(function(res) {
+            res.items.forEach(function(itemRef) {
+                console.log("item --> " + itemRef.toString());
+                i++;
+                displayFiles(i, itemRef);
+            });
+            res.prefixes.forEach(function(itemRef) {
+                console.log("folder --> " + itemRef.toString());
+                i++;
+                let folder_html = '';
+                folder_html += '<div class="col-lg-3 col-md-6 col-sm-6">';
+                folder_html += '<div class="card card-block card-stretch card-height">';
+                folder_html += '<div class="card-body image-thumb">';
+                folder_html += '<div class="mb-4 text-center p-3 rounded iq-thumb">';
+                folder_html += '<div class="iq-image-overlay"></div>';
+                folder_html += '<a href="';
+                folder_html += '/Faculty/folder_view/';
+                folder_html += String(itemRef.location.path);
+                folder_html += '">';
+                folder_html += '<img src="{% static "assets/images/layouts/page-7/folder3.png" %}" class="img-fluid" alt="image1">';
+                folder_html += '</a>';
+                folder_html += '</div>';
+
+                folder_html += '<div class="d-flex justify-content-between">';
+                folder_html += '<h6>';
+                folder_html += itemRef.name;
+                folder_html += '</h6>';
+
+                folder_html += '<div class="card-header-toolbar">';
+                folder_html += '<div class="dropdown">';
+                folder_html += '<span class="dropdown-toggle" id="dropdownMenuButton10" data-toggle="dropdown">';
+                folder_html += '<i class="ri-more-2-fill"></i>';
+                folder_html += '</span>';
+                folder_html += '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton10">';
+                folder_html += '<button class="dropdown-item" onclick=\'Delete("' + String(itemRef.location.path) + '")\'><i class="ri-delete-bin-6-fill mr-2"></i>Delete</button>';
+                //folder_html += '<a class="dropdown-item" href="#"><i class="ri-file-download-fill mr-2"></i>Download</a>';
+                folder_html += '</div>';
+                folder_html += '</div>';
+                folder_html += '</div>';
+                folder_html += '</div>';
+
+                folder_html += '</div>';
+                folder_html += '</div>';
+                folder_html += '</div>';
+                $("#files").append(folder_html);
+                // console.log(itemRef)
+
+
+                let list_view_html_folder = '';
+                list_view_html_folder += '<tr>';
+                list_view_html_folder += '<td>';
+                list_view_html_folder += '<div class="d-flex align-items-center">';
+                list_view_html_folder += '<div class="icon-small bg-danger rounded mr-3">';
+                list_view_html_folder += '<img src="https://img.icons8.com/fluent/32/000000/folder-invoices.png"/>';
+                list_view_html_folder += '</div>';
+                list_view_html_folder += '<a href="';
+                list_view_html_folder += '/Faculty/folder_view/';
+                list_view_html_folder += String(itemRef.location.path);
+                list_view_html_folder += '">';
+                list_view_html_folder += itemRef.name;
+                list_view_html_folder += '</a>';
+                list_view_html_folder += '</div>';
+                list_view_html_folder += '</td>';
+                list_view_html_folder += '<td>';
+                list_view_html_folder += '2021';
+                list_view_html_folder += '</td>';
+                list_view_html_folder += '<td>';
+                list_view_html_folder += '2020';
+                list_view_html_folder += '</td>';
+                list_view_html_folder += '<td>';
+                list_view_html_folder += '60MB';
+                list_view_html_folder += '</td>';
+                list_view_html_folder += '<td>';
+                list_view_html_folder += '<div class="dropdown">';
+                list_view_html_folder += '<span class="dropdown-toggle" id="dropdownMenuButton10" data-toggle="dropdown">';
+                list_view_html_folder += '<i class="ri-more-fill"></i>';
+                list_view_html_folder += '</span>';
+                list_view_html_folder += '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton10">';
+                list_view_html_folder += '<a class="dropdown-item" href="#"><i class="ri-eye-fill mr-2"></i>View</a>';
+                list_view_html_folder += '<button class="dropdown-item" onclick=\'Delete("'+ String(itemRef.location.path)+'")\'><i class="ri-delete-bin-6-fill mr-2"></i>Delete</button>';
+                // list_view_html_folder += '<a class="dropdown-item" href="#"><i class="ri-file-download-fill mr-2"></i>Download</a>';
+                list_view_html_folder += '</div>';
+                list_view_html_folder += '</div>';
+                list_view_html_folder += '</td>';
+                list_view_html_folder += '</tr>';
+                $('#listview_of_file').append(list_view_html_folder);
+
+            });
+        }).catch(function(error) {
+            // Uh-oh, an error occurred!
+            console.log("error:",error)
+        });
+    });
+
+    function displayFiles(row, items) {
+        var filename;
+        var filesize;
+        var filetype;
+        var timecreate;
+        var updated;
+        var type;
+        var url_type;
+        items.getMetadata().then(function(metadata) {
+            console.log(metadata);
+            filename = metadata.name;
+            filesize = metadata.size;
+            filetype = metadata.contentType;
+            timecreate = metadata.timeCreated;
+            updated = metadata.updated;
+            console.log(filetype);
+            items.getDownloadURL().then(function(url) {
+                console.log(url);
+                console.log("metadata:",metadata)
+                if (filetype.search("image") != -1) {
+                    let new_html = '';
+                    new_html += '<div class="col-lg-3 col-md-6 col-sm-6">';
+                    new_html += '<div class="card card-block card-stretch card-height">';
+                    new_html += '<div class="card-body image-thumb">';
+                    new_html += '<div class="mb-4 text-center p-3 rounded iq-thumb">';
+                    new_html += '<a class="image-popup-vertical-fit" href="';
+                    new_html += url;
+                    new_html += '"><img src="';
+                    new_html += url;
+                    new_html += '" class="img-fluid" alt="image1"></a>';
+                    new_html += '</div>';
+                    new_html += '<div class="d-flex justify-content-between">';
+                    new_html += '<h6>';
+                    new_html += filename;
+                    new_html += '</h6>';
+
+                    new_html += '<div class="card-header-toolbar">'
+                    new_html += '<div class="dropdown">';
+                    new_html += '<span class="dropdown-toggle" id="dropdownMenuButton06" data-toggle="dropdown">';
+                    new_html += '<i class="ri-more-2-fill"></i>';
+                    new_html += '</span>';
+                    new_html += '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton06">';
+                    new_html += '<button class="dropdown-item" onclick=\'downloadFile("' + url + '","'+items.name+'")\'><i class="ri-file-download-fill mr-2"></i>Download</button>';
+                    new_html += '<button class="dropdown-item" onclick=\'deleteFile("' + String(items.location.path) + '")\'><i class="ri-delete-bin-6-fill mr-2"></i>Delete</button>';
+                    new_html += '<a class="dropdown-item" href="#"><i class="ri-restart-line mr-2"></i>restore</a>';
+                    new_html += '</div>';
+                    new_html += '</div>';
+                    new_html += '</div>';
+                    new_html += '</div>';
+                    new_html += '</div>';
+                    new_html += '</div>';
+                    new_html += '</div>';
+                    $('#files').append(new_html);
+                } else if (filetype.search("application/pdf") != -1) {
+                    typess = filetype.substring(12);
+                    console.log(typess);
+                    let new_html = '';
+                    new_html += '<div class="col-lg-3 col-md-6 col-sm-6">';
+                    new_html += '<div class="card card-block card-stretch card-height">';
+                    new_html += '<div class="card-body image-thumb">';
+                    new_html += '<div class="mb-4 text-center p-3 rounded iq-thumb">';
+                    new_html += '<div class="iq-image-overlay"></div>';
+                    new_html += '<a target="block" href="';
+                    new_html += url;
+                    new_html += '">'
+                    new_html += '<img src="{% static "assets/images/layouts/page-7/pdf.png" %}" class="img-fluid"alt="image1">';
+                    new_html += '</a>';
+                    new_html += '</div>';
+                    new_html += '<div class="d-flex justify-content-between">';
+                    new_html += '<h6>';
+                    new_html += filename;
+                    new_html += '</h6>'
+                    new_html += '<div class="card-header-toolbar">'
+                    new_html += '<div class="dropdown">';
+                    new_html += '<span class="dropdown-toggle" id="dropdownMenuButton06" data-toggle="dropdown">';
+                    new_html += '<i class="ri-more-2-fill"></i>';
+                    new_html += '</span>';
+                    new_html += '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton06">';
+                    new_html += '<button class="dropdown-item" onclick=\'downloadFile("' + url + '","'+items.name+'")\'><i class="ri-file-download-fill mr-2"></i>Download</button>';
+                    new_html += '<button class="dropdown-item" onclick=\'deleteFile("' + String(items.location.path) + '")\'><i class="ri-delete-bin-6-fill mr-2"></i>Delete</button>';
+                    new_html += '</div>';
+                    new_html += '</div>';
+                    new_html += '</div>';
+                    new_html += '</div>';
+                    new_html += '</div>';
+                    new_html += '</div>';
+                    new_html += '</div>';
+                    $('#files').append(new_html);
+                } else {
+                    let new_html = '';
+                    new_html += '<div class="col-lg-3 col-md-6 col-sm-6">';
+                    new_html += '<div class="card card-block card-stretch card-height">';
+                    new_html += '<div class="card-body image-thumb">';
+                    new_html += '<div class="mb-4 text-center p-3 rounded iq-thumb">';
+                    new_html += '<div class="iq-image-overlay"></div>';
+                    new_html += '<a target="block" href="';
+                    new_html += url;
+                    new_html += '"><img src="{% static "assets/images/layouts/page-7/file.jpg" %}" class="img-fluid" alt="image1"></a>';
+                    new_html += '</div>';
+                    new_html += '<div class="d-flex justify-content-between">';
+                    new_html += '<h6>';
+                    new_html += filename;
+                    new_html += '</h6>'
+
+
+                    new_html += '<div class="card-header-toolbar">'
+                    new_html += '<div class="dropdown">';
+                    new_html += '<span class="dropdown-toggle" id="dropdownMenuButton06" data-toggle="dropdown">';
+                    new_html += '<i class="ri-more-2-fill"></i>';
+                    new_html += '</span>';
+                    new_html += '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton06">';
+                    new_html += '<button class="dropdown-item" onclick=\'downloadFile("' + url + '","'+items.name+'")\'><i class="ri-file-download-fill mr-2"></i>Download</button>';
+                    new_html += '<button class="dropdown-item" onclick=\'deleteFile("' + String(items.location.path) + '")\'><i class="ri-delete-bin-6-fill mr-2"></i>Delete</button>';
+                    new_html += '<a class="dropdown-item" href="#"><i class="ri-restart-line mr-2"></i>restore</a>';
+                    new_html += '</div>';
+                    new_html += '</div>';
+                    new_html += '</div>';
+                    new_html += '</div>';
+                    new_html += '</div>';
+                    new_html += '</div>';
+                    new_html += '</div>';
+                    $('#files').append(new_html);
+                }
+
+                let list_view_html = '';
+                list_view_html += '<tr>';
+                list_view_html += '<td>';
+                list_view_html += '<div class="d-flex align-items-center">';
+                list_view_html += '<div class="icon-small bg-success rounded mr-3">';
+                list_view_html += '<img src="https://img.icons8.com/color/32/000000/google-docs--v1.png"/>';
+                list_view_html += '</div>';
+                list_view_html += '<a target="block" href="';
+                list_view_html += url;
+                list_view_html += '" >';
+                list_view_html += filename;
+                list_view_html += '</a>';
+                list_view_html += '</div>';
+                list_view_html += '</td>';
+                list_view_html += '<td>';
+                list_view_html += timecreate;
+                list_view_html += '</td>';
+                list_view_html += '<td>';
+                list_view_html += updated;
+                list_view_html += '</td>';
+                list_view_html += '<td>';
+                list_view_html += Math.trunc(filesize/1000) + ' KB';
+                list_view_html += '</td>';
+                list_view_html += '<td>';
+                list_view_html += '<div class="dropdown">';
+                list_view_html += '<span class="dropdown-toggle" id="dropdownMenuButton10" data-toggle="dropdown">';
+                list_view_html += '<i class="ri-more-fill"></i>';
+                list_view_html += '</span>';
+                list_view_html += '<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton10">';
+                list_view_html += '<a class="dropdown-item" href="#"><i class="ri-eye-fill mr-2"></i>View</a>';
+                list_view_html += '<button class="dropdown-item" onclick=\'downloadFile("' + url + '","'+items.name+'")\'><i class="ri-file-download-fill mr-2"></i>Download</button>';
+                list_view_html += '<button class="dropdown-item" onclick=\'deleteFile("' + String(items.location.path) + '")\'><i class="ri-delete-bin-6-fill mr-2"></i>Delete</button>';
+                // list_view_html += '<a class="dropdown-item" href="'+url+'" target="_blank" download="'+items.name+'"><i class="ri-file-download-fill mr-2"></i>Download</a>';
+                list_view_html += '</div>';
+                list_view_html += '</div>';
+                list_view_html += '</td>';
+                list_view_html += '</tr>';
+                $('#listview_of_file').append(list_view_html);
+
+
+            });
+        }).catch(function(error) {
+
+        });
+    }
+
+    function downloadFile(url,filename){
+        var xhr = new XMLHttpRequest();
+        xhr.responseType = 'blob';
+        xhr.onload = (event) => {
+            var blob = xhr.response;
+            var newurl = window.URL.createObjectURL(blob)
+            const link = document.createElement("a");
+            link.href = newurl
+            link.setAttribute('download',filename);
+            link.click();
+        };
+        xhr.open('GET', url);
+        xhr.send();
+    }
+
+    const sleep = (milliseconds) => {
+        return new Promise(resolve => setTimeout(resolve, 1000))
+    }
+    async function Delete(path){
+        if(confirm("Are you sure?"))
+        {
+            var i = await deleteFolder(path)
+            sleep(1000).then(() => {
+                alert("Deleted successfully")
+                window.location.href = '/Faculty/Drive/'
+            })       
+        }
+    }
+    async function deleteFolder(path){
+        var listRef = storageRef.child(path);
+        listRef.listAll().then(function(res){
+            if(res.prefixes.length > 0)
+            {
+                res.prefixes.forEach(async function(item){
+                    var i = await deleteFolder(item.location.path)
+                });
+            }
+            if(res.items.length > 0){
+                res.items.forEach(async function(item){
+                    var i = await deleteFiles(item.location.path)
+                });
+            }
+        });
+    }
+
+    function deleteFiles(path) {
+        console.log(path);
+        var newpath = path + "/";
+        console.log(newpath)
+        var deleteRef = storageRef.child(newpath)
+        deleteRef.delete().then(()=>{
+            console.log("Deleted successfully");
+        }).catch((error) => {
+            console.log(error)
+        });
+    }
+
+    function deleteFile(path) {
+        console.log(path);
+        var newpath = path + "/";
+        console.log(newpath)
+        var deleteRef = storageRef.child(newpath)
+        if(confirm("Are you sure?"))
+        {
+            deleteRef.delete().then(()=>{
+                alert("Deleted successfully");
+            }).catch((error) => {
+                console.log(error)
+            });
+            window.location.href = '/Faculty/Drive/';
+        }
+    }
+</script>
+{% endblock script %}

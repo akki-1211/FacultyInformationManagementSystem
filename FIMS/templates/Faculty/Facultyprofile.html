@@ -1,0 +1,279 @@
+{% extends 'layout/FacultyLayout.html' %} {% load static %} {% block main %}
+<div class="col-lg-12">
+    <div class="card">
+        <div class="card-body p-0">
+            <div class="iq-edit-list usr-edit">
+                <ul class="iq-edit-profile d-flex nav nav-pills">
+                    <li class="col-md-6 p-0">
+                        <a class="nav-link active" data-toggle="pill" href="#personal-information">
+                   Personal Information
+                   </a>
+                    </li>
+                    <li class="col-md-6 p-0">
+                        <a class="nav-link" data-toggle="pill" href="#chang-pwd">
+                   Change Password
+                   </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-12">
+    <div class="iq-edit-list-data">
+        <div class="tab-content">
+            <div class="tab-pane fade active show" id="personal-information" role="tabpanel">
+
+                <form method="POST" action="/Faculty/updateProfile/">
+                    <div class="row">
+                        <div class="col-xl-3 col-lg-4">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between">
+                                    <div class="header-title">
+                                        <h4 class="card-title">Profile</h4>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <label>Profile Photo:</label>
+                                        <img id="profileImg" src="{{user.profile_picture}}" alt="https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTF8fHByb2ZpbGV8ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=60" style="width: 200px;
+                        height:200px; border-radius: 10%;">
+                                        <br><br>
+                                        <input type="hidden" name="imgurl" id='imgUrl' value="{{user.profile_picture}}" />
+                                        <label class="btn btn-primary">
+                            Change Photo <input type="file" id="changeImage" hidden>
+                        </label>
+                                        <!-- <input type="file" id="changeImage" class="btn btn-primary" value="Change Photo"> -->
+                                    </div>
+                                    <div class="form-group">
+                                        <label>User Role:</label>
+                                        <input type="text" disabled name="fname" value="{{user.job}}" class="form-control" id="fname" placeholder="First Name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Department:</label>
+                                        <input type="text" disabled name="fname" value="{{user.department}}" class="form-control" id="department" placeholder="First Name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="lurl">Linkedin Url:</label>
+                                        <input type="text" name="Linkedinurl" value="{{user.linkedinurl}}" class="form-control" id="lurl" placeholder="Linkedin Url">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-9 col-lg-8">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between">
+                                    <div class="header-title">
+                                        <h4 class="card-title">Information</h4>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="new-user-info">
+                                        <div class="row">
+                                            {% csrf_token %}
+                                            <div class="form-group col-md-6">
+                                                <label for="fname">First Name:</label>
+                                                <input type="text" name="fname" value="{{user.firstname}}" class="form-control" id="fname" placeholder="First Name">
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label for="lname">Last Name:</label>
+                                                <input type="text" name="lname" value="{{user.lastname}}" class="form-control" id="lname" placeholder="Last Name">
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label for="add1">Street Address 1:</label>
+                                                <input type="text" name="add1" value="{{user.address1}}" class="form-control" id="add1" placeholder="Street Address 1">
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label for="add2">Street Address 2:
+
+                            </label>
+                                                <input type="text" name="add2" value="{{user.address2}}" class="form-control" id="add2" placeholder="Street Address 2">
+                                            </div>
+                                            <div class="form-group col-sm-12">
+                                                <label>Country:</label>
+                                                <input type="text" name="country" value="{{user.country}}" class="form-control" id="country" placeholder="Street Address 2">
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label for="mobno">Mobile Number:</label>
+                                                <input type="text" name="mobno" value="{{user.mobilenumber}}" class="form-control" id="mobno" placeholder="Mobile Number">
+                                            </div>
+                                            <!-- <div class="form-group col-md-6">
+                            <label for="email">Email:</label>
+                            <input type="email" name="email" value="{{user.email}}" class="form-control" id="email" placeholder="Email">
+                        </div> -->
+                                            <div class="form-group col-md-6">
+                                                <label for="pno">Pin Code:</label>
+                                                <input type="text" name="pno" value="{{user.pincode}}" class="form-control" id="pno" placeholder="Pin Code">
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="city">Town/City:</label>
+                                                <input type="text" name="cityss" value="{{user.city}}" class="form-control" id="city" placeholder="Town/City">
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <!-- <h5 class="mb-3">Security</h5>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label for="pass">Password:</label>
+                            <input type="password" name="pass" class="form-control" id="pass" placeholder="Password">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="rpass">Repeat Password:</label>
+                            <input type="password" name="rpass" class="form-control" id="rpass" placeholder="Repeat Password ">
+                        </div>
+                     </div> -->
+                                        <button type="submit" class="btn btn-primary">Update</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="col-lg-12 col-md-12">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card card-block card-stretch card-height">
+                                <div class="card-header row">
+                                    <div class="header-title col-md-11">
+                                        <h4 class="card-title">Experience</h4>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <button style="background: transparent; border: none;" data-toggle="modal" data-target=".bd-example-modal-lg"><img src="https://img.icons8.com/plasticine/40/000000/plus-math.png" /></button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <ul class="list-inline mb-0 p-0">
+                                        {% for experience in experience %}
+                                        <li class="d-flex align-items-center" style="margin-bottom: 10px;">
+                                            {% if forloop.counter|divisibleby:2 %}
+                                            <span class="bg-danger rounded-small iq-card-icon-small mr-3">{{ forloop.counter }}</span>
+                                            <p class="mb-0 font-size-16">{{experience.description}} | {{experience.fromdate}} ---- {{experience.tilldates}}</p>
+                                            {% else %}
+                                            <span class="bg-primary rounded-small iq-card-icon-small mr-3">{{ forloop.counter }}</span>
+                                            <p class="mb-0 font-size-16">{{experience.description}} | {{experience.fromdate}} ---- {{experience.tilldates}}</p>
+                                            {% endif %}
+
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="modal fade bd-example-modal-lg" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <form method="POST" action="/Faculty/updateExperience/">
+                                {% csrf_token %}
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Tell Us Something About Your Experience</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+             <span aria-hidden="true">&times;</span>
+             </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="new-user-info">
+                                                <div class="row">
+                                                    <div class="form-group col-md-12">
+                                                        <input type="text" class="form-control" name="comments" id="comments" placeholder="Details">
+                                                    </div>
+                                                    <div class="form-group col-md-6">
+                                                        <label for="fromdate">From</label>
+                                                        <input type="date" class="form-control" name="fromdate" id="fromdate" placeholder="From">
+                                                    </div>
+                                                    <div class="form-group col-md-6">
+                                                        <label for="tilldate">To</label>
+                                                        <input type="date" class="form-control" name="to" id="tilldate" placeholder="Till">
+                                                    </div>
+                                                    <div class="form-group  col-md-12">
+                                                        <h6></h6>
+                                                        <input type="checkbox" id="terms_and_conditions" name="terms_and_conditions" value="signature">
+                                                        <input type="checkbox" id="terms_and_conditions" name="terms_and_conditions" value="default" checked hidden>
+                                                        <label for="terms_and_conditions">present</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-warning" data-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn btn-primary">Add</button>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="tab-pane fade" id="chang-pwd" role="tabpanel">
+                <div class="card">
+                    <div class="card-body">
+                        <form method="POST" action="/Faculty/changepassword/">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger mr-6">Send Password Reset Email</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock main %} {% block script %}
+<script src="https://www.gstatic.com/firebasejs/6.2.4/firebase.js"></script>
+<script>
+    config = {
+        apiKey: "AIzaSyB0E9kvv4N7TKM6jiBeUnaUhHro8ML1UzA",
+        authDomain: "facultyinformationsystem-49a2b.firebaseapp.com",
+        projectId: "facultyinformationsystem-49a2b",
+        storageBucket: "facultyinformationsystem-49a2b.appspot.com",
+        messagingSenderId: "90902353716",
+        appId: "1:90902353716:web:44b655ed0b6a9bcd2df761",
+        measurementId: "G-RLK92EMYC8",
+        databaseURL: "https://facultyinformationsystem-49a2b.firebaseio.com"
+    }
+    firebase.initializeApp(config);
+    var storage = firebase.storage();
+    var storageRef = storage.ref().child('{{path}}');
+    $('input#changeImage').change(function() {
+        var file = document.getElementById("changeImage").files[0]
+        var uploadTask = storageRef.child('{{path}}/image.jpeg').put(file)
+        uploadTask.on('state_changed',
+            (snapshot) => {},
+            (error) => {},
+            () => {
+                // Handle successful uploads on complete
+                // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+                uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                    console.log('File available at', downloadURL);
+                    var img = document.getElementById("profileImg");
+                    img.src = downloadURL
+                    var imgurl = document.getElementById("imgUrl");
+                    imgurl.value = downloadURL;
+                });
+            }
+        );
+    })
+    $('#terms_and_conditions').click(function() {
+        //If the checkbox is checked.
+        if ($(this).is(':checked')) {
+            //Enable the submit button.
+            $('#tilldate').attr("disabled", true);
+        } else {
+            //If it is not checked, disable the button.
+            $('#tilldate').attr("disabled", false);
+        }
+    });
+</script>
+{% endblock script %}

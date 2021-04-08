@@ -1,0 +1,172 @@
+{% extends 'layout/FacultyLayout.html' %} {% load static %} {% block main %} {% block css %} {% endblock %}
+<div class="card">
+    <div class="card-header d-flex justify-content-between">
+        <div class="header-title">
+            <h4 class="card-title">Request For Leave </h4>
+        </div>
+    </div>
+    <div class="card-body">
+        <!-- Large modal -->
+        <button type="button" class="btn btn-primary mt-2" data-toggle="modal" data-target=".bd-example-modal-lg">Leave Request</button>
+        <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Leave Application</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="new-user-info">
+                                    <form method="POST">
+                                        {% csrf_token %}
+                                        <div class="row">
+                                            <div class="form-group col-sm-12">
+                                                <label>Leave Application For</label>
+                                                <select class="form-control" name="leaveType_" id="leaveType_">
+                                                    <option>Medical Issue</option>
+                                                    <option>Family Function</option>
+                                                    <option>Training</option>
+                                                    <option>Travelling</option>
+                                                    <option>Other</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group col-md-6">
+                                                <label for="Mobile">Mobile Phone Number</label>
+                                                <input type="text" class="form-control" name="Mobile" id="Mobile" placeholder="Mobile Phone Number">
+                                            </div>
+
+                                            <div class="form-group col-md-6">
+                                                <label for="Department">Department</label>
+                                                <input type="text" class="form-control" name="Department" id="Department" placeholder="Department">
+                                            </div>
+
+                                            <div class="form-group col-md-6">
+                                                <label for="designation">Designation</label>
+                                                <input type="text" class="form-control" name="designation" id="designation" placeholder="designation">
+                                            </div>
+
+                                            <div class="form-group col-md-6">
+                                                <label for="joining date">Joining Date</label>
+                                                <input type="date" class="form-control" name="joiningdate" id="joining date" placeholder="joining date">
+                                            </div>
+                                            <div class="form-group  col-md-12">
+                                                <input type="radio" id="Grant-in-Aid" name="g" value="Grant-in-Aid">
+                                                <label for="male">Grant-in-Aid</label><br>
+                                                <input type="radio" id="Self Finance - permanent" name="g" value="Self Finance - permanent">
+                                                <label for="female">Self Finance - permanent</label><br>
+                                                <input type="radio" id="Ad-hoc" name="g" value="Ad-hoc">
+                                                <label for="other">Ad-hoc</label><br>
+                                                <input type="radio" id="Fix" name="g" value="Fix">
+                                                <label for="other">Fix</label>
+                                            </div>
+
+                                            <div class="form-group col-md-6">
+                                                <label for="fromdate">Period From</label>
+                                                <input type="date" class="form-control" name="fromdate" id="fromdate" placeholder="From">
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label for="tilldate">To</label>
+                                                <input type="date" class="form-control" name="tilldate" id="tilldate" placeholder="Till">
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="city">Reason For Leave</label>
+                                                <input type="text" class="form-control" name="comments" id="comments" placeholder="Reason">
+                                            </div>
+                                            <div class="form-group  col-md-12">
+                                                <h6>Kindly sanction leaves and oblige</h6>
+                                                <input type="checkbox" id="signature" name="signature" value="signature">
+                                                <label for="other">I Accept</label>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-primary">Apply</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card card-block card-stretch card-height">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table mb-0 table-borderless tbl-server-info" id="leaves">
+                        <thead>
+                            <tr>
+                                <th id="from" scope="col">From</th>
+                                <th id="till" scope="col">Till</th>
+                                <th id="nod" scope="col">Number Of Days</th>
+                                <th id="Ltype" scope="col">Leave Type</th>
+                                <th id="reason" scope="col">Reason</th>
+                                <th id="rtime" scope="col">Time Requested</th>
+                                <th scope="col">Status</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            {% for leave in leaves %}
+                            <tr>
+                                <td>{{leave.From}}</td>
+                                <td>{{leave.Till}}</td>
+                                <td>{{leave.number_of_days}}</td>
+                                <td>{{leave.LeaveType}}</td>
+                                <td>{{leave.Reason}}</td>
+                                <td>{{leave.created_at}}</td>
+                                <td>{% if leave.leavestatus == 1 %}
+                                    <button type="button" class="mt-2 btn btn-success" disabled><i class="ri-bill-fill"></i>Approved</button> {% elif leave.leavestatus == 2 %}
+                                    <button type="button" class="mt-2 btn btn-danger" disabled><i class="ri-heart-fill"></i>Rejected</button> {% else %}
+                                    <button type="button" class="mt-2 btn btn-info" disabled><i class="ri-heart-fill"></i>Pending</button> {% endif %}</td>
+                                <td>
+                                    <div class="dropdown">
+                                        <span class="dropdown-toggle" id="dropdownMenuButton10" data-toggle="dropdown">
+                                        <i class="ri-more-fill"></i>
+                                    </span>
+                                        <div class="dropdown-menu dropdown-menu-left" aria-labelledby="dropdownMenuButton10">
+                                            <a class="dropdown-item" href="#"><i class="ri-eye-fill mr-2"></i>View</a>
+                                            <a class="dropdown-item" href="#"><i class="ri-delete-bin-6-fill mr-2"></i>Delete</a>
+                                            <a class="dropdown-item" href="#"><i class="ri-pencil-fill mr-2"></i>Edit</a>
+                                            <a class="dropdown-item" href="#"><i class="ri-printer-fill mr-2"></i>Print</a>
+                                            <a class="dropdown-item" href="#"><i class="ri-file-download-fill mr-2"></i>Download</a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock main %} {% block script %}
+<script>
+    $(document).ready(function() {
+        $('#leaves').DataTable();
+    });
+</script>
+{% endblock script %}

@@ -1,0 +1,145 @@
+{% extends 'layout/AdminLayout.html' %} {% load static %} {% block main %}
+<form method="POST" action="/Admin/updateProfile/">
+<div class="row">
+    <div class="col-xl-3 col-lg-4">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+                <div class="header-title">
+                    <h4 class="card-title">Profile</h4>
+                </div>
+            </div>
+            <div class="card-body">
+                {% csrf_token %}
+                    <div class="form-group">
+                        <label>Profile Photo:</label>
+                        <img id="profileImg" src="{{user.profile_picture}}" alt="https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTF8fHByb2ZpbGV8ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=60" style="width: 200px;
+                        height:200px; border-radius: 10%;">
+                        <br><br>
+                        <input type="hidden" name="imgurl" id='imgUrl' value="{{user.profile_picture}}"/>
+                        <label class="btn btn-primary">
+                            Change Photo <input type="file" id="changeImage" hidden>
+                        </label>
+                        <!-- <input type="file" id="changeImage" class="btn btn-primary" value="Change Photo"> -->
+                    </div>
+                    <div class="form-group">
+                        <label>User Role:</label>
+                        <input type="text" disabled name="fname" value="{{user.job}}" class="form-control" id="fname" placeholder="First Name">
+                    </div>
+                    <div class="form-group">
+                        <label>Department:</label>
+                        <input type="text" disabled name="fname" value="{{user.department}}" class="form-control" id="department" placeholder="First Name">
+                    </div>
+                    <div class="form-group">
+                        <label for="lurl">Linkedin Url:</label>
+                        <input type="text" name="Linkedinurl" value="{{user.linkedinurl}}" class="form-control" id="lurl" placeholder="Linkedin Url">
+                    </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-9 col-lg-8">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+                <div class="header-title">
+                    <h4 class="card-title">Information</h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="new-user-info">
+                    <div class="row">
+                        {% csrf_token %}
+                        <div class="form-group col-md-6">
+                            <label for="fname">First Name:</label>
+                            <input type="text" name="fname" value="{{user.firstname}}" class="form-control" id="fname" placeholder="First Name">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="lname">Last Name:</label>
+                            <input type="text" name="lname" value="{{user.lastname}}" class="form-control" id="lname" placeholder="Last Name">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="add1">Street Address 1:</label>
+                            <input type="text" name="add1" value="{{user.address1}}" class="form-control" id="add1" placeholder="Street Address 1">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="add2">Street Address 2:
+
+                            </label>
+                            <input type="text" name="add2" value="{{user.address2}}" class="form-control" id="add2" placeholder="Street Address 2">
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label>Country:</label>
+                            <input type="text" name="country" value="{{user.country}}" class="form-control" id="country" placeholder="Street Address 2">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="mobno">Mobile Number:</label>
+                            <input type="text" name="mobno" value="{{user.mobilenumber}}" class="form-control" id="mobno" placeholder="Mobile Number">
+                        </div>
+                        <!-- <div class="form-group col-md-6">
+                            <label for="email">Email:</label>
+                            <input type="email" name="email" value="{{user.email}}" class="form-control" id="email" placeholder="Email">
+                        </div> -->
+                        <div class="form-group col-md-6">
+                            <label for="pno">Pin Code:</label>
+                            <input type="text" name="pno" value="{{user.pincode}}" class="form-control" id="pno" placeholder="Pin Code">
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label for="city">Town/City:</label>
+                            <input type="text" name="cityss" value="{{user.city}}" class="form-control" id="city" placeholder="Town/City">
+                        </div>
+                    </div>
+                    <hr>
+                    <!-- <h5 class="mb-3">Security</h5>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label for="pass">Password:</label>
+                            <input type="password" name="pass" class="form-control" id="pass" placeholder="Password">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="rpass">Repeat Password:</label>
+                            <input type="password" name="rpass" class="form-control" id="rpass" placeholder="Repeat Password ">
+                        </div>
+                     </div> -->
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</form>
+{% endblock main %}
+{% block script %}
+<script src="https://www.gstatic.com/firebasejs/6.2.4/firebase.js"></script>
+<script>
+    config = {
+        apiKey: "AIzaSyB0E9kvv4N7TKM6jiBeUnaUhHro8ML1UzA",
+        authDomain: "facultyinformationsystem-49a2b.firebaseapp.com",
+        projectId: "facultyinformationsystem-49a2b",
+        storageBucket: "facultyinformationsystem-49a2b.appspot.com",
+        messagingSenderId: "90902353716",
+        appId: "1:90902353716:web:44b655ed0b6a9bcd2df761",
+        measurementId: "G-RLK92EMYC8",
+        databaseURL: "https://facultyinformationsystem-49a2b.firebaseio.com"
+    }
+    firebase.initializeApp(config);
+    var storage = firebase.storage();
+    var storageRef = storage.ref().child('{{path}}');
+    $('input#changeImage').change(function(){
+        var file = document.getElementById("changeImage").files[0]
+        var uploadTask = storageRef.child('{{path}}/image.jpeg').put(file)
+        uploadTask.on('state_changed', 
+        (snapshot) => {}, 
+        (error) => {}, 
+        () => {
+            // Handle successful uploads on complete
+            // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+            uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                console.log('File available at', downloadURL);
+                var img = document.getElementById("profileImg");
+                img.src = downloadURL
+                var imgurl = document.getElementById("imgUrl");
+                imgurl.value = downloadURL;
+            });
+        }
+        );
+    })
+</script>
+{% endblock script %}

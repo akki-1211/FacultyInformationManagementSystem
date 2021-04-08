@@ -1,0 +1,114 @@
+{% extends 'layout/AdminLayout.html' %} {% load static %} {% block main %}
+
+<div class="row">
+    <div class="col-xl-3 col-lg-4">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+                <div class="header-title">
+                    <h4 class="card-title">Add New User</h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <form action="/Admin/AddUsers/" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label>User Role:</label>
+                        <select class="form-control" name="selectuserrole" id="selectuserrole">
+                         <option>Select</option>
+                         <option>Admin</option>
+                         <option>Faculty</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Department:</label>
+                        <select class="form-control" name="selectdepartment" id="selectdepartment">
+                         <option>Select</option>
+                         <option>Chemical</option>
+                         <option>Computer</option>
+                         <option>Civil</option>
+                         <option>Electronic Communication</option>
+                         <option>Mechanical</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="lurl">Linkedin Url:</label>
+                        <input type="text" name="Linkedinurl" class="form-control" id="lurl" placeholder="Linkedin Url">
+                    </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-9 col-lg-8">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+                <div class="header-title">
+                    <h4 class="card-title">New User Information</h4>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="new-user-info">
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label for="fname">First Name:</label>
+                            <input type="text" name="fname" class="form-control" id="fname" placeholder="First Name">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="lname">Last Name:</label>
+                            <input type="text" name="lname" class="form-control" id="lname" placeholder="Last Name">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="add1">Street Address 1:</label>
+                            <input type="text" name="add1" class="form-control" id="add1" placeholder="Street Address 1">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="add2">Street Address 2:</label>
+                            <input type="text" name="add2" class="form-control" id="add2" placeholder="Street Address 2">
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label>Country:</label>
+                            <select name="selectcountry" class="form-control" id="selectcountry">
+                               <option>Select Country</option>
+                               <option>Caneda</option>
+                               <option>Noida</option>
+                               <option >USA</option>
+                               <option>India</option>
+                               <option>Africa</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="mobno">Mobile Number:</label>
+                            <input type="text" name="mobno" class="form-control" id="mobno" placeholder="Mobile Number">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="email">Email:</label>
+                            <input type="email" name="email" class="form-control" id="email" placeholder="Email">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="pno">Pin Code:</label>
+                            <input type="text" name="pno" class="form-control" id="pno" placeholder="Pin Code">
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label for="city">Town/City:</label>
+                            <input type="text" name="cityss" class="form-control" id="city" placeholder="Town/City">
+                        </div>
+                    </div>
+                    <hr>
+                    <h5 class="mb-3">Security</h5>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label for="pass">Password:</label>
+                            <input type="password" name="pass" class="form-control" id="pass" placeholder="Password">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="rpass">Repeat Password:</label>
+                            <input type="password" name="rpass" class="form-control" id="rpass" placeholder="Repeat Password ">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add New User</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock main %}
