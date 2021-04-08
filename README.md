@@ -1,1 +1,1 @@
-# FacultyInformationSystem
+# FacultyInformationManagementSystem
